@@ -1,0 +1,34 @@
+{
+    "name": "kareem/package",
+    "description": "A ready to go package to make it easy developing a laravel Application",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^11.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kareem\\illuminate\\Facilitate": "src/"
+        },
+
+        "files": [
+            "src/Helpers/functions.php"
+        ]
+    },
+
+    "autoload-dev": {
+
+        "psr-4": {
+            "Facilitate\\Tests\\": "tests/"
+        }
+    },
+
+    "authors": [
+        {
+            "name": "kareemre",
+            "email": "kareemrefaat@icloud.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^11.19"
+    }
+}
