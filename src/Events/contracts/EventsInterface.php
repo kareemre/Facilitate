@@ -8,7 +8,7 @@ interface EventsInterface
      * is listening to that event
      * Multiple events could be triggered with one method by adding space between each event
      * 
-     * @return  string $events
+     * @return  string|array $events
      * @return  mixed ...$callbackArguments
      * @return mixed
      */
@@ -17,7 +17,7 @@ interface EventsInterface
     /**
      * Subscribe to the given event name, or in other words add event listener
      * 
-     * @return  string $events
+     * @return  string|array $events
      * @return  string|array $callback
      * @return void
      */

@@ -28,44 +28,74 @@ class Events implements EventsInterface
     public function trigger($events, ...$callbackArguments)
     {
         $events = is_string($events) ? explode(' ', $events) : $events;
-
+        $responses = [];
         foreach ($events as $event) {
 
-            if (! isset($this->eventList[$event])) continue;
+            if (! $this->hasListeners($event)) continue;
 
             foreach ($this->eventList[$event] as $classWithCallBack) {
 
-                if (str_contains($classWithCallBack, '@')) {
 
-                    [$className, $callBack] = $this->explodeClass($classWithCallBack);
-                } else {
+                [$className, $method] = str_contains($classWithCallBack, '@') 
+                                           ? $this->explodeClass($classWithCallBack)
+                                           : [$classWithCallBack, 'handle'];
 
-                    [$className, $callBack] = [$classWithCallBack, 'handle'];
-                }
-
-                if (!$this->isLoaded($className)) {
+                if (! $this->isLoaded($className)) {
                     $this->loadClass($className);
                 }
 
                 $classInstance = $this->get($className);
-                 
+                $response = $classInstance->$method(...$callbackArguments);
+                if ($response === false) return false;
+                $responses[] = $response;
             }
         }
+        return $responses;
     }
 
 
+    /**
+     * Determine if a given event has listeners.
+     *
+     * @param  string  $eventName
+     * @return bool
+     */
+    public function hasListeners($eventName)
+    {
+        return isset($this->eventList[$eventName]);
+    }
+
+
+    /**
+     * get the instantiated class
+     * 
+     * @param string $className
+     * @return object
+     */
     protected function get(string $className)
     {
         return $this->classesList[$className];
     }
 
 
+    /**
+     * Determine if a given class is instantiated.
+     *
+     * @param  string  $className
+     * @return bool
+     */
     protected function isLoaded(string $className)
     {
         return isset($this->classesList[$className]);
     }
 
 
+    /**
+     * instantiate a given class
+     * @param string $className
+     * 
+     * @return void
+     */
     private function loadClass(string $className)
     {
         //apply exception here if not class being set
@@ -73,6 +103,13 @@ class Events implements EventsInterface
     }
 
 
+    /**
+     * explode '@' if the listener is like classname@method
+     * 
+     * @param mixed $classWithCallBack
+     * 
+     * @return array
+     */
     private function explodeClass($classWithCallBack)
     {
         return [$className, $callBack] =  explode('@', $classWithCallBack);
@@ -91,10 +128,6 @@ class Events implements EventsInterface
                 $this->eventList[$event] = [];
             }
 
-            if (is_array($eventListener)) {
-
-                $listenersImploded[] = implode('@', $eventListener);
-            }
 
             if (! in_array($eventListener, $this->eventList[$event])) {
                 $this->eventList[$event][] = $eventListener;
@@ -102,5 +135,4 @@ class Events implements EventsInterface
         }
     }
 }
-
 
