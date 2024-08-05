@@ -2,10 +2,11 @@
 
 namespace Kareem\illuminate\Facilitate\Events;
 
-use App\Events\contracts\EventsInterface;
+use Kareem\illuminate\Facilitate\Events\contracts\EventsInterface;
 use Illuminate\Support\Facades\App;
 
-class Events implements EventsInterface
+
+class Dispatcher implements EventsInterface
 {
 
     /**
@@ -25,10 +26,11 @@ class Events implements EventsInterface
     /**
      * (@inheritDoc)
      */
-    public function trigger($events, ...$callbackArguments)
+    public function dispatch($events, ...$callbackArguments)
     {
-        $events = is_string($events) ? explode(' ', $events) : $events;
+        
         $responses = [];
+        $events = is_string($events) ? explode(' ', $events) : $events;
         foreach ($events as $event) {
 
             if (! $this->hasListeners($event)) continue;

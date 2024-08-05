@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Facilitate\\Tests\\Events\\EventTriggerTest::testBasicEventExecution":8,"Facilitate\\Tests\\Events\\EventDispatcherTest::testResponseWhenNoListenersAreSet":8},"times":{"Facilitate\\Tests\\Events\\EventTriggerTest::testBasicEventExecution":0.031,"Facilitate\\Tests\\Events\\EventDispatcherTest::testResponseWhenNoListenersAreSet":0.01}}

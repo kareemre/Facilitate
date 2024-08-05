@@ -1,5 +1,5 @@
 <?php       
-namespace App\Events\contracts;
+namespace Kareem\illuminate\Facilitate\Events\contracts;
 
 interface EventsInterface
 {
@@ -12,7 +12,7 @@ interface EventsInterface
      * @return  mixed ...$callbackArguments
      * @return mixed
      */
-    public function trigger(string $events, ...$callbackArguments);
+    public function dispatch(string $events, ...$callbackArguments);
     
     /**
      * Subscribe to the given event name, or in other words add event listener
