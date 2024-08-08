@@ -20,5 +20,28 @@ class EventDispatcherTest extends TestCase
         $response = $d->dispatch('foo');
         $this->assertEquals([], $response);
     }
+
+    public function testBasicEventExecution()
+    {
+        $d = new Dispatcher();
+        $d->subscribe('foo', TestEventListener::class);
+        $response = $d->dispatch('foo', ['foo', 'bar']);
+        $this->assertEquals(['baz'], $response);
+    }
+}
+
+class TestEventListener
+{
+    public function handle($foo, $bar)
+    {
+        return 'baz';
+    }
+    
+    //this method will be called if listener is like 
+    //listener::class@method
+    public function onFooEvent($foo, $bar)
+    {
+        return 'baz';
+    }
 }
 

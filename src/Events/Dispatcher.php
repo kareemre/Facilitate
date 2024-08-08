@@ -28,7 +28,7 @@ class Dispatcher implements EventsInterface
      */
     public function dispatch($events, ...$callbackArguments)
     {
-        
+
         $responses = [];
         $events = is_string($events) ? explode(' ', $events) : $events;
         foreach ($events as $event) {
@@ -137,4 +137,3 @@ class Dispatcher implements EventsInterface
         }
     }
 }
-
