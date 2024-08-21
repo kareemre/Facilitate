@@ -20,9 +20,9 @@ interface RepositoryInterface
      * 
      * @param  int id
      * @param  \Illuminate\Http\Request|array $data
-     * @return Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function updata(int $id, $data);
+    public function update(int $id, $data);
 
 
     /**

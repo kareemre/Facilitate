@@ -8,7 +8,7 @@
          cacheDirectory=".phpunit.cache"
          backupStaticProperties="false">
     <testsuites>
-        <testsuite name="Laravel Test Suite">
+        <testsuite name="Facilitate unit Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
