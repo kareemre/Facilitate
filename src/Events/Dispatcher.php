@@ -5,7 +5,6 @@ namespace Kareem\illuminate\Facilitate\Events;
 use Kareem\illuminate\Facilitate\Events\contracts\EventsInterface;
 use Illuminate\Support\Facades\App;
 
-
 class Dispatcher implements EventsInterface
 {
 

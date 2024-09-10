@@ -5,8 +5,8 @@ namespace Facilitate\Tests\Events;
 
 use Kareem\illuminate\Facilitate\Events\Dispatcher;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
-
+//use PHPUnit\Framework\TestCase;
+ use Orchestra\Testbench\TestCase;
 class EventDispatcherTest extends TestCase
 {
     protected function tearDown(): void
@@ -25,7 +25,7 @@ class EventDispatcherTest extends TestCase
     {
         $d = new Dispatcher();
         $d->subscribe('foo', TestEventListener::class);
-        $response = $d->dispatch('foo', ['foo', 'bar']);
+        $response = $d->dispatch('foo', ...['foo', 'bar']);
         $this->assertEquals(['baz'], $response);
     }
 }

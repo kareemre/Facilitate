@@ -3,6 +3,7 @@
 namespace Kareem\illuminate\Facilitate\Repository;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Kareem\illuminate\Facilitate\Events\Dispatcher;
 use Kareem\illuminate\Facilitate\Repository\contracts\RepositoryInterface;
 
@@ -15,10 +16,17 @@ abstract class RepositoryManager implements RepositoryInterface
     const NAME = '';
 
     /**
-     *  TABLE name
+     * TABLE name
      * @const string
      */
     const TABLE = '';
+
+
+    /**
+     * TABLE alias
+     * @const string
+     */
+    const TABLE_ALIAS = '';
 
 
     /**
@@ -43,10 +51,24 @@ abstract class RepositoryManager implements RepositoryInterface
     const FILTERs = [];
 
     /**
+     * Filter by columns used with `list` method only
+     * 
+     * @const array
+     */
+    const FILTER_BY = [];
+
+    /**
      * Event name to be triggered
-     * If set to empty, then it will be the class model name
+
      * 
      * @const string
+     */
+    const EVENT = '';
+
+    /**
+     * Event list that will be triggered 
+     * 
+     * @const array
      */
     const EVENTS_LIST = [
         'listing' => 'onListing',
@@ -85,15 +107,117 @@ abstract class RepositoryManager implements RepositoryInterface
      */
     protected $request;
     /**
-     * Events Object
+     * dispatcher Object
      *
      * @var \Kareem\Illuminate\Facilitate\Events\Dispatcher
      */
     protected $dispatcher;
 
+    /**
+     * Options list
+     *
+     * @param array
+     */
+    protected $options = [];
+
+    /**
+     * Query Builder Object
+     *
+     * @var \Illuminate\Database\Query\Builder
+     */
+    protected $query;
+
+
+    /**
+     * Select class Object
+     *
+     * @var \Kareem\Illuminate\Facilitate\Repository\Select
+     */
+    protected $select;
+
+
     public function __construct(Request $request, Dispatcher $dispatcher)
     {
+        $this->request = $request;
+        $this->dispatcher = $dispatcher;
+        $this->eventName = static::EVENT ?: static::NAME;
+        $this->registerEvents();   
+    }
 
+
+    protected function registerEvents()
+    {
+        if (! $this->eventName) return;
+
+        foreach (static::EVENTS_LIST as $eventName => $methodCallback) {
+            if (method_exists($this, $methodCallback)) {
+                $this->dispatcher->subscribe("{$this->eventName}.$eventName", static::class . '@' . $methodCallback);
+            }
+        }
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function list(array $options)
+    {
+        $this->setOptions($options);
+
+        $this->query = $this->getQuery();
+
+        $this->table = $this->TableName();
+
+        $this->select();
+
+        $filterManger = new FilterManager($this->query, $options, static::FILTER_BY);
+
+
+
+
+    }
+
+
+    protected function setOptions(array $options)
+    {
+        $this->options = $options;
+
+        $selectColumns = (array) $this->getOption($this->options);
+
+        $this->select = new Select($selectColumns);
+    }
+
+
+    protected function getOption(array $options, $default = null)
+    {
+        return Arr::get($this->options, 'select', $default);
+    }
+
+
+    /**
+     * Get instance of query handler
+     *
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return static::MODEL::query();
+    }
+
+    /**
+     * Manage Selected Columns
+     *
+     * @return void
+     */
+    abstract protected function select();
+
+    /**
+     * Get the table name that will be used in the rest of the query like select, where...etc
+     * 
+     * @return string
+     */
+    protected function TableName(): string
+    {
+        return static::TABLE_ALIAS ?: static::TABLE;
     }
 
 
@@ -121,13 +245,6 @@ abstract class RepositoryManager implements RepositoryInterface
 
     }
 
-    /**
-     * @{inheritDoc}
-     */
-    public function list(array $option)
-    {
-
-    }
 
     /**
      * @{inheritDoc}
