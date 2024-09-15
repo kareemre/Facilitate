@@ -86,9 +86,11 @@ class FilterManager
                     ];
                     $options['operator'] ??= $operator;
                     $options['columns'] = $toBeFilteredColumns;
-                } else [
-                    
-                ]
+                } else {
+                    return false;
+                }
+
+                
             }
             $result = $options;
         }
