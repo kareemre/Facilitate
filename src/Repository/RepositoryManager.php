@@ -4,6 +4,7 @@ namespace Kareem\illuminate\Facilitate\Repository;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Kareem\illuminate\Facilitate\Database\Filters\FilterManager;
 use Kareem\illuminate\Facilitate\Events\Dispatcher;
 use Kareem\illuminate\Facilitate\Repository\contracts\RepositoryInterface;
 
@@ -48,7 +49,7 @@ abstract class RepositoryManager implements RepositoryInterface
      * filters class
      * @const array
      */
-    const FILTERs = [];
+    const FILTERS = [];
 
     /**
      * Filter by columns used with `list` method only
@@ -71,17 +72,17 @@ abstract class RepositoryManager implements RepositoryInterface
      * @const array
      */
     const EVENTS_LIST = [
-        'listing' => 'onListing',
+        'listing'   => 'onListing',
         'filtering' => 'filters',
-        'list' => 'onList',
-        'creating' => 'onCreating',
-        'create' => 'onCreate',
-        'saving' => 'onSaving',
-        'save' => 'onSave',
-        'updating' => 'onUpdating',
-        'update' => 'onUpdate',
-        'deleting' => 'onDeleting',
-        'delete' => 'onDelete',
+        'list'      => 'onList',
+        'creating'  => 'onCreating',
+        'create'    => 'onCreate',
+        'saving'    => 'onSaving',
+        'save'      => 'onSave',
+        'updating'  => 'onUpdating',
+        'update'    => 'onUpdate',
+        'deleting'  => 'onDeleting',
+        'delete'    => 'onDelete',
     ];
     
     /**
@@ -170,7 +171,7 @@ abstract class RepositoryManager implements RepositoryInterface
         $this->select();
 
         $filterManger = new FilterManager($this->query, $options, static::FILTER_BY);
-
+        
 
 
 
